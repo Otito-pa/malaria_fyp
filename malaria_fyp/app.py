@@ -7,7 +7,7 @@ import numpy as np
 app = Flask(__name__)
 
 # Load the trained model and encoder
-x
+
 try:
     model = joblib.load('/malaria_fyp/malaria_model.pkl')
     strength_encoder = joblib.load('/malaria_fyp\strength_encoder.pkl')
