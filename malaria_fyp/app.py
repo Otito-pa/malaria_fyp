@@ -7,9 +7,10 @@ import numpy as np
 app = Flask(__name__)
 
 # Load the trained model and encoder
+
 try:
-    model = joblib.load('C:/Users/HP/Desktop/malaria/malaria_frontpage/malaria_model.pkl')
-    strength_encoder = joblib.load('C:/Users/HP/Desktop/malaria/malaria_frontpage/strength_encoder.pkl')
+    model = joblib.load('C:/Users/HP/Desktop/malaria_fyp/malaria_model.pkl')
+    strength_encoder = joblib.load('C:/Users/HP/Desktop/malaria_fyp/strength_encoder.pkl')
 except Exception as e:
     print(f"Error loading model or encoder: {str(e)}")
     model, strength_encoder = None, None
@@ -22,8 +23,8 @@ def load_data(filepath):
         print(f"Error loading data: {str(e)}")
         return None
 
-# Load the data
-df = load_data("C:/Users/HP/Documents/dosages2.xlsx")
+# Load the data  
+df = load_data("C:/Users/HP/Desktop/malaria_fyp/dosages2.xlsx")
 
 # Feature importance from XGBoost model (from notebook)
 feature_importance = {
