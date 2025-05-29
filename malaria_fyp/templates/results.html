@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Malaria Treatment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 100px;
+            background-color: #f4f4f4;
+            
+            background-size:cover;
+            background-position: center;
+            background-image: url('/static/pills.jpeg');
+            background-repeat: no-repeat;
+        
+        }
+        h1, h2 {
+            text-align: center;
+            color: #333;
+        }
+        #chart-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+    
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #results, #inputs, #guidance {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #guidance {
+          background-color:	rgb(237, 241, 243);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+        th {
+            
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Recommended Malaria Treatment</h1>
+    <div id="inputs">
+        <h2>Patient Inputs</h2>
+        <table>
+            <tr><th>Input</th><th>Value</th></tr>
+            <tbody id="input-table"></tbody>
+        </table>
+    </div>
+    <div id="chart-container">
+        <h2>Feature Importance for Prediction</h2>
+        <canvas id="importanceChart"></canvas>
+    </div>
+    <div id="results">
+        <h2>Recommended Drugs</h2>
+        <p>Predicted Strength: <span id="predicted-strength"></span></p>
+        <ul id="drug-list"></ul>
+    </div>
+    <div id="guidance">
+        <h2>How to Purchase Your Antimalarial Medication</h2>
+        <p>The antimalarial drugs recommended by this tool are prescription medications. To ensure safe and effective treatment, follow these steps:</p>
+        <ul>
+            <li><strong>Select any recommended drug:</strong> All drugs recommended have the similar drug component and is good for your condition.Choose anyone based on your preference and verify your choice with your local pharmacist.</li>
+            <li><strong>Consult a Pharmacist or Healthcare Provider:</strong> Present the recommended drugs (listed above) to a licensed pharmacist or your doctor. They will verify the suitability of the medication based on your health profile and local guidelines.</li>
+            <li><strong>Provide Your Prescription Details:</strong> Share the details of your condition (e.g., severity, pregnancy status, weight, and medical conditions) as entered in the form. This helps the pharmacist confirm the appropriateness of the recommended drugs.</li>
+            <li><strong>Follow Local Regulations:</strong> Antimalarials often require a prescription. Visit a registered pharmacy and comply with local laws regarding medication purchases.</li>
+            <li><strong>Discuss Side Effects and Dosage:</strong> Ask the pharmacist about potential side effects, dosage instructions, and any precautions, especially if you are pregnant or have medical conditions.</li>
+            <li><strong>Avoid Self-Medication:</strong> Do not purchase or use antimalarials without professional guidance, as incorrect use can lead to ineffective treatment or health risks.</li>
+        </ul>
+        <p><strong>Note:</strong> This tool provides recommendations based on your input, but final treatment decisions should be made by a healthcare professional.</p>
+    </div>
+    <button onclick="window.location.href='/'">Back to Form</button>
+
+    <script>
+        // Initialize Chart.js bar chart
+        function initChart(featureImportance) {
+            const ctx = document.getElementById('importanceChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(featureImportance),
+                    datasets: [{
+                        label: 'Feature Importance',
+                        data: Object.values(featureImportance),
+                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                        borderColor: 'rgba(0, 123, 255, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Importance Score'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Input Features'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'How Each Input Contributes to the Prediction'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Fetch prediction results and populate page
+        function loadResults() {
+            fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    severity: localStorage.getItem('severity') || 'mild',
+                    pregnancy: localStorage.getItem('pregnancy') || 'no',
+                    trimester: localStorage.getItem('trimester') || '',
+                    weight: localStorage.getItem('weight') || '70',
+                    none: localStorage.getItem('none') || 'yes',
+                    liver: localStorage.getItem('liver') || 'no',
+                    lung: localStorage.getItem('lung') || 'no',
+                    kidney: localStorage.getItem('kidney') || 'no',
+                    heart: localStorage.getItem('heart') || 'no',
+                    hypertension: localStorage.getItem('hypertension') || 'no'
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Populate input table
+                    const inputTable = document.getElementById('input-table');
+                    inputTable.innerHTML = `
+                        <tr><td>Severity</td><td>${data.input_data.severity}</td></tr>
+                        <tr><td>Pregnancy</td><td>${data.input_data.pregnancy}</td></tr>
+                        <tr><td>Trimester</td><td>${data.input_data.trimester}</td></tr>
+                        <tr><td>Weight (kg)</td><td>${data.input_data.weight}</td></tr>
+                        <tr><td>Medical Conditions</td><td>${data.input_data.none === 'Yes' ? 'None' : (Object.entries(data.input_data).filter(([k, v]) => ['liver', 'lung', 'kidney', 'heart', 'hypertension'].includes(k) && v === 'Yes').map(([k]) => k.charAt(0).toUpperCase() + k.slice(1)).join(', ') || 'None')}</td></tr>
+                    `;
+
+                    // Initialize chart with feature importance
+                    initChart(data.feature_importance);
+
+                    // Populate predicted strength and drug list
+                    document.getElementById('predicted-strength').textContent = data.predicted_strength;
+                    const drugList = document.getElementById('drug-list');
+                    drugList.innerHTML = data.drugs.map(drug => `<li>${drug.NAME} (Strength: ${drug.STRENGTHS}, Form: ${drug.FORM})</li>`).join('');
+                } else {
+                    document.getElementById('results').innerHTML = `<p>Error: ${data.error}</p>`;
+                }
+            })
+            .catch(error => {
+                document.getElementById('results').innerHTML = `<p>Error fetching results: ${error.message}</p>`;
+            });
+        }
+
+        // Load results when page loads
+        window.onload = loadResults;
+    </script>
+
+    <!-- Add this button below the existing button in results.html -->
+<button id="randomize-btn" onclick="getRandomDrugs()">Show Different Recommendations</button>
+
+<!-- Add this script to the existing JavaScript section -->
+<script>
+    // Track shown drug indices
+    let shownIndices = new Set();
+    
+    function getRandomDrugs() {
+        fetch('/random_drugs', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                severity: localStorage.getItem('severity') || 'mild',
+                pregnancy: localStorage.getItem('pregnancy') || 'no',
+                trimester: localStorage.getItem('trimester') || '',
+                weight: localStorage.getItem('weight') || '70',
+                none: localStorage.getItem('none') || 'yes',
+                liver: localStorage.getItem('liver') || 'no',
+                lung: localStorage.getItem('lung') || 'no',
+                kidney: localStorage.getItem('kidney') || 'no',
+                heart: localStorage.getItem('heart') || 'no',
+                hypertension: localStorage.getItem('hypertension') || 'no',
+                shown_indices: Array.from(shownIndices)  // Send currently shown indices
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Update the drug list with random recommendations
+                const drugList = document.getElementById('drug-list');
+                drugList.innerHTML = data.drugs.map(drug => 
+                    `<li>${drug.NAME} (Strength: ${drug.STRENGTHS}, Form: ${drug.FORM})</li>`
+                ).join('');
+                
+                // Update shown indices
+                shownIndices = new Set(data.shown_indices);
+                
+                // Disable button if all options have been shown
+                if (data.drugs.length === 0 || 
+                    (data.shown_indices.length > 0 && data.shown_indices.length === data.drugs.length)) {
+                    document.getElementById('randomize-btn').disabled = true;
+                    document.getElementById('randomize-btn').textContent = 'All options shown';
+                }
+            } else {
+                alert('Error: ' + (data.error || 'Unable to get random recommendations'));
+            }
+        })
+        .catch(error => {
+            alert('Error fetching random recommendations: ' + error.message);
+        });
+    }
+</script>
+</body>
+</html>
