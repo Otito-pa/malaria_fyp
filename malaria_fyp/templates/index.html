@@ -210,5 +210,11 @@
             localStorage.clear();
         }
     </script>
+    <script>
+  const form = document.getElementById("malaria-form");
+  form.addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent form submission from reloading the page
+  });
+</script>
 </body>
 </html>
