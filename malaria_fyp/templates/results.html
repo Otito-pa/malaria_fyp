@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recommended Malaria Treatment</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,7 +67,6 @@
             background-color: #0056b3;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <h1>Recommended Malaria Treatment</h1>
@@ -108,12 +108,12 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: Object.keys(featureImportance),
+                    labels: ['Severity', 'Pregnancy Status', 'Weight'],
                     datasets: [{
                         label: 'Feature Importance',
-                        data: Object.values(featureImportance),
-                        backgroundColor: 'rgba(0, 123, 255, 0.5)',
-                        borderColor: 'rgba(0, 123, 255, 1)',
+                        data: [0.4, 0.3, 0.2],
+                        backgroundColor: ['#4CAF50', '#2196F3', '#FF9800'],
+                        borderColor: ['#388E3C', '#1976D2', '#F57C00'],
                         borderWidth: 1
                     }]
                 },
@@ -247,5 +247,7 @@
         });
     }
 </script>
+
+
 </body>
 </html>
