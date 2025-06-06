@@ -69,7 +69,15 @@
     </style>
 </head>
 <body>
+
+
     <h1>Recommended Malaria Treatment</h1>
+     <div id="results">
+        <h2>Recommended Drugs</h2>
+        <p>Predicted Strength: <span id="predicted-strength"></span></p>
+        <ul id="drug-list"></ul>
+    </div>
+
     <div id="inputs">
         <h2>Patient Inputs</h2>
         <table>
@@ -81,21 +89,15 @@
         <h2>Feature Importance for Prediction</h2>
         <canvas id="importanceChart"></canvas>
     </div>
-    <div id="results">
-        <h2>Recommended Drugs</h2>
-        <p>Predicted Strength: <span id="predicted-strength"></span></p>
-        <ul id="drug-list"></ul>
-    </div>
+   
     <div id="guidance">
         <h2>How to Purchase Your Antimalarial Medication</h2>
         <p>The antimalarial drugs recommended by this tool are prescription medications. To ensure safe and effective treatment, follow these steps:</p>
         <ul>
             <li><strong>Select any recommended drug:</strong> All drugs recommended have the similar drug component and is good for your condition.Choose anyone based on your preference and verify your choice with your local pharmacist.</li>
-            <li><strong>Consult a Pharmacist or Healthcare Provider:</strong> Present the recommended drugs (listed above) to a licensed pharmacist or your doctor. They will verify the suitability of the medication based on your health profile and local guidelines.</li>
-            <li><strong>Provide Your Prescription Details:</strong> Share the details of your condition (e.g., severity, pregnancy status, weight, and medical conditions) as entered in the form. This helps the pharmacist confirm the appropriateness of the recommended drugs.</li>
-            <li><strong>Follow Local Regulations:</strong> Antimalarials often require a prescription. Visit a registered pharmacy and comply with local laws regarding medication purchases.</li>
-            <li><strong>Discuss Side Effects and Dosage:</strong> Ask the pharmacist about potential side effects, dosage instructions, and any precautions, especially if you are pregnant or have medical conditions.</li>
-            <li><strong>Avoid Self-Medication:</strong> Do not purchase or use antimalarials without professional guidance, as incorrect use can lead to ineffective treatment or health risks.</li>
+            <li><strong>Consult a Pharmacist or Healthcare Provider</strong></li>
+            <li><strong>Ask the pharmacist about the dosage instruction</strong> </li>
+            <li><strong>Avoid Self-Medication:</strong> </li>
         </ul>
         <p><strong>Note:</strong> This tool provides recommendations based on your input, but final treatment decisions should be made by a healthcare professional.</p>
     </div>
